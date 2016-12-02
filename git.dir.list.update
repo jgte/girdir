@@ -1,13 +1,14 @@
 #!/bin/bash
 
+DIR_HERE=$(cd "$( dirname "${BASH_SOURCE[0]}" )"; pwd)
 VERSIONED_DIRS=
 for i in svn git
 do
-  VERSIONED_DIRS+="`find . -type d -name .$i | sed 's_\.'$i'__g' | sed 's_\./__g'`\n"
+  VERSIONED_DIRS+="`find . -type d -name .$i | sed 's_/\.'$i'__g' | sed 's_\./__g'`\n"
 done
 
 echo Current contents of dir.list:
-`cat $DIR_HERE/git.dir.list | grep -v ^#`
+cat $DIR_HERE/git.dir.list | grep -v ^#
 
 echo Found the following .svn or .git dirs:
 echo -e "$VERSIONED_DIRS"
@@ -15,7 +16,7 @@ echo -e "$VERSIONED_DIRS"
 echo "Do you wish to update the contents of the git.dir.list file?"
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) echo -e "$VERSIONED_DIRS" > dir.list; exit;;
+        Yes ) echo -e "$VERSIONED_DIRS" > $DIR_HERE/git.dir.list; exit;;
         No ) exit;;
     esac
 done
