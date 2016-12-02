@@ -1,0 +1,48 @@
+#!/bin/bash -u
+#
+# status repositories
+
+DIR_HERE=$(cd "$( dirname "${BASH_SOURCE[0]}" )"; pwd)
+SVN_COM="svn status -u"
+GIT_COM="git fetch && git --no-pager log --name-status ..origin/master | grep -E '^[A-Z]\b' | sort | uniq"
+
+
+# save and change IFS
+OLDIFS=$IFS
+IFS=$'\n'
+
+for i in `cat $DIR_HERE/dir.list | grep -v ^#`
+do
+  #enfore ignore list
+  SKIP=false
+  if [ -e "$DIR_HERE/dir.list.ignore" ]
+  then
+    for j in `cat dir.list.ignore`
+    do
+      if [[ ! "${i/$j/}" == "$i" ]]
+      then
+        SKIP=true
+        break
+      fi
+    done
+  fi
+  #check if this dir is to be skipped
+  [ "$SKIP" == "true" ] && continue
+  #go there
+  cd "$DIR_HERE/$i" || exit $?
+  echo "---------------- $PWD -----------------"
+  #statements
+  if [[ -d .svn ]]; then
+    eval $SVN_COM
+  elif [[ -d .git ]]; then
+    BRANCH=$(git remote)
+    [ ! -z "$BRANCH" ] && eval ${GIT_COM/origin/$BRANCH}
+  else
+    echo "ERROR: cannot find either .svn or .git dir. Exiting..."
+    exit 3
+  fi
+  cd - >& /dev/null
+done
+
+# restore IFS
+IFS=$OLDIFS
