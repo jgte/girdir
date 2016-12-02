@@ -11,13 +11,13 @@ GIT_COM="git pull"
 OLDIFS=$IFS
 IFS=$'\n'
 
-for i in `cat $DIR_HERE/dir.list | grep -v ^#`
+for i in `cat $DIR_HERE/git.dir.list | grep -v ^#`
 do
   #enfore ignore list
   SKIP=false
-  if [ -e "$DIR_HERE/dir.list.ignore" ]
+  if [ -e "$DIR_HERE/git.dir.list.ignore" ]
   then
-    for j in `cat dir.list.ignore`
+    for j in `cat $DIR_HERE/git.dir.list.ignore | grep -v ^#`
     do
       if [[ ! "${i/$j/}" == "$i" ]]
       then
