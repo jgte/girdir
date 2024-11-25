@@ -3,10 +3,8 @@
 # status repositories
 
 DIR_HERE=$(cd "$( dirname "${BASH_SOURCE[0]}" )"; pwd)
-SVN_COM="svn info -R | grep Revision: | sort | uniq &&
-svn info -R | grep Date: | sort | uniq | tail -n1"
-GIT_COM="git --no-pager log --pretty=format:'%C(auto)%h -%d %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --max-count=1 &&
-echo"
+SVN_COM="svn info -R | grep Revision: | sort | uniq && svn info -R | grep Date: | sort | uniq | tail -n1"
+GIT_COM="git --no-pager log --pretty=format:'%C(auto)%h -%d %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --max-count=1 && echo"
 
 
 # save and change IFS
